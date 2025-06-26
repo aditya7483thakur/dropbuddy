@@ -1,5 +1,12 @@
+import { SignOutButton } from "@clerk/nextjs";
+
 const page = () => {
-  return <div>DASHBOARD</div>;
+  return (
+    <div>
+      {" "}
+      <SignOutButton />
+    </div>
+  );
 };
 
 export default page;
