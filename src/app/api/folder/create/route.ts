@@ -13,7 +13,11 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { name, parentId = null } = body;
+    const { name, userId: bodyUserId, parentId = null } = body;
+
+    if (userId !== bodyUserId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     if (!name || typeof name !== "string" || name.trim() === "") {
       return NextResponse.json(
