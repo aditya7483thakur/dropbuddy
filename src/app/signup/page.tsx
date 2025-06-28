@@ -5,7 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Eye, EyeOff, FileText, Shield, Users, Zap } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  FileText,
+  LoaderCircle,
+  Shield,
+  Users,
+  Zap,
+} from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -36,6 +44,7 @@ const formSchema = z.object({
 export default function FileManagementSignup() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [isVerifying, setIsVerifying] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [otp, setOtp] = useState("");
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -51,6 +60,8 @@ export default function FileManagementSignup() {
       return;
     }
 
+    setIsSubmitting(true);
+
     const { email, password } = values;
 
     try {
@@ -60,6 +71,7 @@ export default function FileManagementSignup() {
         password,
       });
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+      setIsSubmitting(false);
       setIsVerifying(true); // show verification input
 
       console.log("Signup result:", result);
@@ -73,6 +85,7 @@ export default function FileManagementSignup() {
       console.error("Clerk is not fully loaded");
       return;
     }
+    setIsSubmitting(true);
 
     try {
       const result = await signUp.attemptEmailAddressVerification({
@@ -81,6 +94,7 @@ export default function FileManagementSignup() {
 
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
+        setIsSubmitting(false);
         router.push("/dashboard");
       }
     } catch (error) {
@@ -140,8 +154,12 @@ export default function FileManagementSignup() {
                   <InputOTPSlot index={5} />
                 </InputOTPGroup>
               </InputOTP>
-              <Button type="button" onClick={handleVerification}>
-                Submit
+              <Button
+                type="button"
+                className={isSubmitting ? "bg-black/75" : "bg-black"}
+              >
+                {isSubmitting && <LoaderCircle className=" animate-spin" />}
+                Verify
               </Button>
             </div>
           ) : (
@@ -176,7 +194,13 @@ export default function FileManagementSignup() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit">Submit</Button>
+                <Button
+                  type="submit"
+                  className={isSubmitting ? "bg-black/75" : "bg-black"}
+                >
+                  {isSubmitting && <LoaderCircle className=" animate-spin" />}
+                  Submit
+                </Button>
               </form>
             </Form>
           )}

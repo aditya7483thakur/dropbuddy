@@ -5,7 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Eye, EyeOff, FileText, Shield, Users, Zap } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  FileText,
+  LoaderCircle,
+  Shield,
+  Users,
+  Zap,
+} from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -34,8 +42,7 @@ const formSchema = z.object({
 
 export default function FileManagementSignup() {
   const { isLoaded, signIn, setActive } = useSignIn();
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [otp, setOtp] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,6 +57,7 @@ export default function FileManagementSignup() {
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const result = await signIn.create({
         identifier: values.email,
@@ -58,6 +66,7 @@ export default function FileManagementSignup() {
 
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
+        setIsSubmitting(false);
         router.push("/dashboard");
       } else {
         console.error("Unexpected sign-in flow:", result.status);
@@ -102,61 +111,43 @@ export default function FileManagementSignup() {
             <div id="clerk-captcha" />
           )}
 
-          {isVerifying ? (
-            <div>
-              {" "}
-              <InputOTP
-                maxLength={6}
-                value={otp}
-                onChange={(value) => setOtp(value)}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="abc@gmail.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter your password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                className={isSubmitting ? "bg-black/75" : "bg-black"}
               >
-                <InputOTPGroup>
-                  <InputOTPSlot index={0} />
-                  <InputOTPSlot index={1} />
-                  <InputOTPSlot index={2} />
-                  <InputOTPSlot index={3} />
-                  <InputOTPSlot index={4} />
-                  <InputOTPSlot index={5} />
-                </InputOTPGroup>
-              </InputOTP>
-              <Button type="button">Submit</Button>
-            </div>
-          ) : (
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="abc@gmail.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter your password" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit">Submit</Button>
-              </form>
-            </Form>
-          )}
+                {isSubmitting && <LoaderCircle className=" animate-spin" />}
+                Sign In
+              </Button>
+            </form>
+          </Form>
 
           {/* Signup Form */}
 
