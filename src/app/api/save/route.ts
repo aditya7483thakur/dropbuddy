@@ -23,10 +23,6 @@ export async function POST(request: NextRequest) {
       bodyUserId,
     } = body;
 
-    if (userId !== bodyUserId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     if (!name || !url) {
       return NextResponse.json(
         { error: "Missing required data" },

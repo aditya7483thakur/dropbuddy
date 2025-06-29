@@ -1,0 +1,44 @@
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { db } from "@/db";
+import { files } from "@/db/schema";
+import { and, eq } from "drizzle-orm";
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { fileId: string } }
+) {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { fileId } = params;
+
+    const file = await db
+      .select()
+      .from(files)
+      .where(and(eq(files.id, fileId), eq(files.userId, userId)));
+
+    if (!file.length) {
+      return NextResponse.json({ error: "File not found" }, { status: 404 });
+    }
+
+    const currentStarred = file[0].isStarred;
+
+    const [updated] = await db
+      .update(files)
+      .set({ isStarred: !currentStarred })
+      .where(and(eq(files.id, fileId), eq(files.userId, userId)))
+      .returning();
+
+    return NextResponse.json({ success: true, file: updated });
+  } catch (error) {
+    console.error("Error updating star status:", error);
+    return NextResponse.json(
+      { error: "Failed to update star status" },
+      { status: 500 }
+    );
+  }
+}
