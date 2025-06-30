@@ -1,19 +1,17 @@
 // components/FolderForm.tsx
 "use client";
-
 import { useState } from "react";
-import { useAuth } from "@clerk/nextjs";
 import { createFolder } from "../services/folderService";
+import { useAuth } from "@clerk/nextjs";
 
-export function FolderForm() {
+export function CreateFolder() {
   const [folderName, setFolderName] = useState("");
   const { getToken } = useAuth();
-
   const handleCreate = async () => {
     if (!folderName.trim()) return;
 
-    const token = await getToken(); // 👈 Clerk token
     try {
+      const token = await getToken();
       const res = await createFolder({ name: folderName }, token!);
       console.log("Folder created:", res);
       setFolderName("");

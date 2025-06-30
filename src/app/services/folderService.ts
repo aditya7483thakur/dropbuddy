@@ -1,17 +1,18 @@
 // services/folderService.ts
-import axios from "axios";
+
+import axiosInstance from "@/lib/axios";
+
 interface CreateFolderPayload {
   name: string;
   parentId?: string;
 }
 
-// CLIENT SIDE example
 export async function createFolder(
   payload: CreateFolderPayload,
   token: string
 ) {
   try {
-    const res = await axios.post("/api/folder/create", payload, {
+    const res = await axiosInstance.post("/api/folder/create", payload, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

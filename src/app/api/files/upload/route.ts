@@ -1,20 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { eq, and } from "drizzle-orm";
-import ImageKit from "imagekit";
+import imagekit from "@/lib/imagekit";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "@/db";
 import { files } from "@/db/schema";
 
-// Initialize ImageKit with your credentials
-const imagekit = new ImageKit({
-  publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || "",
-  privateKey: process.env.IMAGEKIT_PRIVATE_KEY || "",
-  urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || "",
-});
-
 export async function POST(request: NextRequest) {
   try {
+    console.log("HIIT this api");
     const { userId } = await auth();
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -98,7 +92,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(newFile);
   } catch (error) {
-    console.error("Error uploading file:", error);
+    console.log("Error uploading file:", error);
     return NextResponse.json(
       { error: "Failed to upload file" },
       { status: 500 }
