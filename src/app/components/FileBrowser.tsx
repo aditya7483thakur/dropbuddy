@@ -46,6 +46,7 @@ export default function FileBrowser({
 
   return (
     <div className="p-4">
+      <p>Current Folder ID: {parentId ?? "Root"}</p>
       {loading && <p>Loading files...</p>}
       {error && <p className="text-red-500">{error}</p>}
 

@@ -6,7 +6,7 @@ import FileBrowser from "../components/FileBrowser";
 
 export default function Page() {
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
-
+  console.log("Dashboard folder", currentFolderId);
   // Handler when user clicks a folder inside FileBrowser
   const handleFolderClick = (folderId: string) => {
     setCurrentFolderId(folderId);
@@ -38,8 +38,8 @@ export default function Page() {
           onFolderClick={handleFolderClick}
         />
       </div>
-      <CreateFolder />
-      <FileUploadComponent />
+      <CreateFolder parentId={currentFolderId} />
+      <FileUploadComponent parentId={currentFolderId} />
 
       <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
     </div>

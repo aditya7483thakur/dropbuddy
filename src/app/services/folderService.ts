@@ -4,7 +4,7 @@ import axiosInstance from "@/lib/axios";
 
 interface CreateFolderPayload {
   name: string;
-  parentId?: string;
+  parentId: string | null;
 }
 
 export async function createFolder(

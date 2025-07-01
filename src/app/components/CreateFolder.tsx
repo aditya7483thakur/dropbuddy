@@ -4,15 +4,16 @@ import { useState } from "react";
 import { createFolder } from "../services/folderService";
 import { useAuth } from "@clerk/nextjs";
 
-export function CreateFolder() {
+export function CreateFolder({ parentId }: { parentId: string | null }) {
   const [folderName, setFolderName] = useState("");
+  console.log("createFolder", parentId);
   const { getToken } = useAuth();
   const handleCreate = async () => {
     if (!folderName.trim()) return;
 
     try {
       const token = await getToken();
-      const res = await createFolder({ name: folderName }, token!);
+      const res = await createFolder({ name: folderName, parentId }, token!);
       console.log("Folder created:", res);
       setFolderName("");
     } catch (err) {

@@ -6,12 +6,16 @@ import { useAuth } from "@clerk/nextjs";
 const MAX_FILE_SIZE_MB = 5;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
-export default function FileUploadComponent() {
+export default function FileUploadComponent({
+  parentId,
+}: {
+  parentId: string | null;
+}) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploadResult, setUploadResult] = useState<any>(null);
-
+  console.log("FileUpload", parentId);
   const { getToken } = useAuth();
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError("");
@@ -47,7 +51,7 @@ export default function FileUploadComponent() {
     try {
       const token = await getToken();
       console.log("HIII before");
-      const result = await fileUpload(selectedFile, token!);
+      const result = await fileUpload(selectedFile, token!, parentId);
       console.log("HII after");
       setUploadResult(result);
     } catch (err) {

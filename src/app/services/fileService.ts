@@ -1,6 +1,10 @@
 import axiosInstance from "@/lib/axios";
 
-export async function fileUpload(file: File, token: string, parentId?: string) {
+export async function fileUpload(
+  file: File,
+  token: string,
+  parentId: string | null
+) {
   try {
     const formData = new FormData();
     formData.append("file", file);
