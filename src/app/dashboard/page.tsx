@@ -1,29 +1,36 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CreateFolder } from "../components/CreateFolder";
 import FileUploadComponent from "../components/FileUpload";
 import FileBrowser from "../components/FileBrowser";
+import { useFolder } from "@/context/FolderContext";
+import { Preahvihear } from "next/font/google";
 
 export default function Page() {
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
+  const { path, setPath } = useFolder();
   console.log("Dashboard folder", currentFolderId);
+
   // Handler when user clicks a folder inside FileBrowser
-  const handleFolderClick = (folderId: string) => {
+  const handleFolderClick = (folderId: string, folderName: string) => {
     setCurrentFolderId(folderId);
+    setPath((prev) => [...prev, { id: folderId, name: folderName }]);
   };
 
-  // Optionally, add a "Back" button to go one level up
+  // Back button just removes last folder from path and updates current folder id accordingly
   const handleBack = () => {
-    // For example, you can track parent folder IDs or simply reset to null
-    setCurrentFolderId(null);
+    setPath((prev) => {
+      if (prev.length > 1) {
+        const newPath = prev.slice(0, -1);
+        setCurrentFolderId(newPath[newPath.length - 1].id);
+        return newPath;
+      }
+      return prev; // Already at root, no change
+    });
   };
+
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
-      <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-        <div className="bg-muted/50 aspect-video rounded-xl" />
-        <div className="bg-muted/50 aspect-video rounded-xl" />
-        <div className="bg-muted/50 aspect-video rounded-xl" />
-      </div>
       <div>
         <button
           onClick={handleBack}
@@ -40,8 +47,6 @@ export default function Page() {
       </div>
       <CreateFolder parentId={currentFolderId} />
       <FileUploadComponent parentId={currentFolderId} />
-
-      <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
     </div>
   );
 }
