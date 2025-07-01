@@ -1,14 +1,12 @@
 "use client";
 import { useState } from "react";
-import { CreateFolder } from "../components/CreateFolder";
-import FileUploadComponent from "../components/FileUpload";
-import FileBrowser from "../components/FileBrowser";
+
 import { useFolder } from "@/context/FolderContext";
 import { ArrowLeft, Star, Trash2 } from "lucide-react";
+import FileBrowser from "@/components/custom/FileBrowser";
 
 export default function Page() {
-  const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
-  const { path, setPath } = useFolder();
+  const { setPath, currentFolderId, setCurrentFolderId } = useFolder();
   const [filter, setFilter] = useState<"all" | "starred" | "trash">("all");
   console.log("Dashboard folder", currentFolderId);
 
@@ -32,10 +30,6 @@ export default function Page() {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
-      <div className="flex ">
-        <CreateFolder parentId={currentFolderId} />
-        <FileUploadComponent parentId={currentFolderId} />
-      </div>
       <div>
         <div className="flex justify-between">
           <div>

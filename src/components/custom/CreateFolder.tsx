@@ -1,25 +1,22 @@
 // components/FolderForm.tsx
 "use client";
 import { useState } from "react";
-import { createFolder } from "../services/folderService";
 import { useAuth } from "@clerk/nextjs";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Folder, Plus } from "lucide-react";
+import { createFolder } from "@/app/services/folderService";
 
 export function CreateFolder({ parentId }: { parentId: string | null }) {
   const [folderName, setFolderName] = useState("");
-  console.log("createFolder", parentId);
   const { getToken } = useAuth();
   const handleCreate = async () => {
     if (!folderName.trim()) return;
@@ -37,15 +34,11 @@ export function CreateFolder({ parentId }: { parentId: string | null }) {
   return (
     <div>
       <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button
-            variant="outline"
-            size="icon"
-            className=" w-60 h-60 border-2 border-dashed border-gray-300 hover:cursor-pointer hover:border-indigo-400 hover:bg-indigo-50 transition-colors duration-200 rounded-lg"
-            title="Create new folder"
-          >
-            <Plus className="h-6 w-6 text-gray-600 hover:text-indigo-600" />
-          </Button>
+        <AlertDialogTrigger asChild className="px-0 ">
+          <div className="flex font-medium text-lg w-full justify-center items-center">
+            <Folder className="w-4 h-4" />
+            <p className="pl-2"> Create Folder</p>
+          </div>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -61,7 +54,7 @@ export function CreateFolder({ parentId }: { parentId: string | null }) {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <Button
               onClick={handleCreate}
-              className="bg-indigo-600 text-white p-2 ml-2 rounded"
+              className="bg-indigo-500 text-white hover:cursor-pointer"
             >
               Create
             </Button>
