@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
-import { getUserFiles } from "../services/fileService";
+import { getUserFiles, starFiles, trashFiles } from "../services/fileService";
 import {
   DownloadIcon,
   FileIcon,
@@ -37,6 +37,34 @@ export default function FileBrowser({
   const [error, setError] = useState("");
   const { getToken } = useAuth();
   console.log(files);
+  const [isTrashLoading, setIsTrashLoading] = useState(false);
+  const [isStarLoading, setIsStarLoading] = useState(false);
+
+  const handleStarToggle = async (fileId: string) => {
+    setIsStarLoading(true);
+    try {
+      const token = await getToken();
+      const response = await starFiles(token!, fileId);
+    } catch (err) {
+      console.error("Failed to update star status", err);
+    } finally {
+      setIsStarLoading(false);
+    }
+  };
+
+  const handleTrashToggle = async (fileId: string) => {
+    setIsTrashLoading(true);
+    try {
+      const token = await getToken();
+      const response = await trashFiles(token!, fileId);
+      console.log("Res", response);
+    } catch (error) {
+      console.error("Failed to update trash status");
+    } finally {
+      setIsTrashLoading(false);
+    }
+  };
+
   const fetchFiles = async () => {
     setLoading(true);
     setError("");
@@ -114,7 +142,7 @@ export default function FileBrowser({
         {files.map((file) => (
           <div
             key={file.id}
-            className="relative flex flex-col border rounded-lg p-4 shadow-sm hover:shadow-md hover:bg-gray-50 cursor-pointer transition"
+            className="relative flex flex-col border rounded-lg p-4 shadow-sm hover:shadow-md cursor-pointer transition"
             onClick={() => {
               if (file.type === "folder" && onFolderClick) {
                 onFolderClick(file.id, file.name);
@@ -123,24 +151,13 @@ export default function FileBrowser({
           >
             {/* Thumbnail or folder icon */}
 
-            <div className="mb-3 flex justify-center items-center h-28 bg-gray-100 rounded-md overflow-hidden">
+            <div className="mb-3 flex justify-center items-center h-28 rounded-md overflow-hidden">
               {file.type === "folder" ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-12 w-12 text-yellow-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 7a2 2 0 012-2h5l2 2h7a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"
-                  />
-                </svg>
+                <div className="h-20 w-20 text-6xl flex items-center justify-center">
+                  🗂️
+                </div>
               ) : (
-                <div className="relative group aspect-video w-full rounded-md overflow-hidden border shadow-sm flex justify-center items-center">
+                <div className="relative group aspect-video w-full rounded-md overflow-hidden shadow-2xl flex justify-center items-center">
                   {file.thumbnailUrl ? (
                     // Show image thumbnail
                     <img
@@ -156,7 +173,7 @@ export default function FileBrowser({
                       onClick={() => window.open(file.fileUrl, "_blank")}
                       title="Open PDF"
                     >
-                      <FileTextIcon className="h-10 w-10 text-red-500" />
+                      <img src="pdf.png" className=" h-16 w-16" alt="" />
                     </div>
                   ) : (
                     // Generic file fallback
@@ -177,20 +194,21 @@ export default function FileBrowser({
             {/* Action icons: Star & Trash */}
             <div className="flex justify-between items-center mt-auto">
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // onToggleStar && onToggleStar(file.id);
-                }}
+                onClick={() => handleStarToggle(file.id)}
+                disabled={isStarLoading}
                 aria-label={file.isStarred ? "Unstar" : "Star"}
-                className="text-yellow-400 hover:text-yellow-500 transition"
+                className={`transition rounded-full p-1 border ${
+                  file.isStarred
+                    ? "text-yellow-400 border-yellow-400 hover:bg-yellow-100"
+                    : "text-yellow-400 border-yellow-400 hover:bg-yellow-50"
+                } ${isStarLoading ? "opacity-50 cursor-not-allowed" : ""}`}
               >
                 <Star
                   size={20}
                   fill={file.isStarred ? "currentColor" : "none"}
-                  stroke={file.isStarred ? "currentColor" : "currentColor"}
+                  stroke="currentColor"
                 />
               </button>
-
               {file.type !== "folder" && (
                 <>
                   <DownloadIcon
@@ -204,14 +222,16 @@ export default function FileBrowser({
               )}
 
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // onDelete && onDelete(file.id);
-                }}
-                aria-label="Delete"
-                className="text-red-500 hover:text-red-600 transition"
+                onClick={() => handleTrashToggle(file.id)}
+                disabled={isTrashLoading}
+                aria-label="Mark as Trash"
+                className={`p-1 rounded-full border transition ${
+                  file.isTrash
+                    ? "bg-red-500 text-white border-red-500 hover:bg-red-600"
+                    : "text-red-500 border-red-500 hover:bg-red-100"
+                }`}
               >
-                <Trash2 size={20} />
+                <Trash2 size={18} />
               </button>
             </div>
           </div>

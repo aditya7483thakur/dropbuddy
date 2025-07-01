@@ -31,6 +31,10 @@ export default function Page() {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
+      <div className="flex ">
+        <CreateFolder parentId={currentFolderId} />
+        <FileUploadComponent parentId={currentFolderId} />
+      </div>
       <div>
         <button
           onClick={handleBack}
@@ -45,8 +49,6 @@ export default function Page() {
           onFolderClick={handleFolderClick}
         />
       </div>
-      <CreateFolder parentId={currentFolderId} />
-      <FileUploadComponent parentId={currentFolderId} />
     </div>
   );
 }

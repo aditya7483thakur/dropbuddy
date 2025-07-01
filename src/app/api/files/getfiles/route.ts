@@ -16,7 +16,6 @@ export async function GET(req: NextRequest) {
 
     const conditions = [
       eq(files.userId, userId),
-      eq(files.isTrash, false),
       parentId ? eq(files.parentId, parentId) : isNull(files.parentId),
     ];
 

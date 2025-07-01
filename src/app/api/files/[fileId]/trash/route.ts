@@ -14,7 +14,7 @@ export async function POST(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { fileId } = params;
+    const { fileId } = await params;
 
     const file = await db
       .select()

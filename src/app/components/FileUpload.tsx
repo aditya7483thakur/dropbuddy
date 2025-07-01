@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { fileUpload } from "../services/fileService";
 import { useAuth } from "@clerk/nextjs";
+import { UploadCloud } from "lucide-react";
 
 const MAX_FILE_SIZE_MB = 5;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -15,8 +16,8 @@ export default function FileUploadComponent({
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploadResult, setUploadResult] = useState<any>(null);
-  console.log("FileUpload", parentId);
   const { getToken } = useAuth();
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError("");
     setUploadResult(null);
@@ -28,7 +29,6 @@ export default function FileUploadComponent({
 
     const file = e.target.files[0];
 
-    console.log(file);
     if (file.size > MAX_FILE_SIZE_BYTES) {
       setError(`File size must be less than ${MAX_FILE_SIZE_MB} MB`);
       setSelectedFile(null);
@@ -50,10 +50,9 @@ export default function FileUploadComponent({
 
     try {
       const token = await getToken();
-      console.log("HIII before");
       const result = await fileUpload(selectedFile, token!, parentId);
-      console.log("HII after");
       setUploadResult(result);
+      setSelectedFile(null);
     } catch (err) {
       setError("Upload failed. Please try again.");
       console.error(err);
@@ -63,18 +62,33 @@ export default function FileUploadComponent({
   };
 
   return (
-    <div>
-      <input type="file" onChange={handleFileChange} />
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="max-w-md mx-auto p-4 rounded-2xl shadow-lg border border-gray-200 bg-white">
+      <label className="flex flex-col items-center justify-center border-2 border-dashed border-blue-400 p-6 rounded-xl cursor-pointer hover:bg-blue-50 transition">
+        <UploadCloud className="w-10 h-10 text-blue-500 mb-2" />
+        <p className="text-blue-600 font-medium">
+          {selectedFile ? selectedFile.name : "Click to choose a file"}
+        </p>
+        <input type="file" onChange={handleFileChange} className="hidden" />
+      </label>
 
-      <button onClick={handleUpload} disabled={loading || !selectedFile}>
+      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+
+      <button
+        onClick={handleUpload}
+        disabled={loading || !selectedFile}
+        className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+      >
         {loading ? "Uploading..." : "Upload"}
       </button>
 
       {uploadResult && (
-        <div>
-          <h4>Upload Success</h4>
-          <pre>{JSON.stringify(uploadResult, null, 2)}</pre>
+        <div className="mt-4 bg-green-50 border border-green-300 p-3 rounded-lg">
+          <h4 className="text-green-700 font-semibold mb-1">
+            Upload Successful
+          </h4>
+          <pre className="text-sm text-green-800 overflow-auto">
+            {JSON.stringify(uploadResult, null, 2)}
+          </pre>
         </div>
       )}
     </div>
