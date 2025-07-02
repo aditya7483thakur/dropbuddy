@@ -14,26 +14,39 @@ import {
 import { Button } from "@/components/ui/button";
 import { Folder, Plus } from "lucide-react";
 import { createFolder } from "@/app/services/folderService";
+import { toast } from "sonner";
 
 export function CreateFolder({ parentId }: { parentId: string | null }) {
   const [folderName, setFolderName] = useState("");
+  const [loader, setLoader] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { getToken } = useAuth();
   const handleCreate = async () => {
     if (!folderName.trim()) return;
 
+    setLoader(true);
     try {
       const token = await getToken();
-      const res = await createFolder({ name: folderName, parentId }, token!);
-      console.log("Folder created:", res);
+      const response = await createFolder(
+        { name: folderName, parentId },
+        token!
+      );
+
+      if (response?.status === 200 || response?.message) {
+        toast.success(response.message);
+        setIsDialogOpen(false);
+      }
       setFolderName("");
     } catch (err) {
-      alert("Error creating folder");
+      toast.error("Error creating folder");
+    } finally {
+      setLoader(false);
     }
   };
 
   return (
     <div>
-      <AlertDialog>
+      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <AlertDialogTrigger asChild className="px-0 ">
           <div className="flex font-medium text-lg w-full justify-center items-center">
             <Folder className="w-4 h-4" />
@@ -56,7 +69,7 @@ export function CreateFolder({ parentId }: { parentId: string | null }) {
               onClick={handleCreate}
               className="bg-indigo-500 text-white hover:cursor-pointer"
             >
-              Create
+              {loader ? "Creating..." : "Create"}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

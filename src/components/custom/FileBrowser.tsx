@@ -105,8 +105,7 @@ export default function FileBrowser({
 
   const handleDownloadFile = async (file: FileType) => {
     try {
-      // Show loading toast
-      toast("Preparing Download", {
+      toast.info("Preparing Download", {
         description: `Getting "${file.name}" ready for download...`,
       });
 

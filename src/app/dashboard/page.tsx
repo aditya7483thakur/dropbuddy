@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useFolder } from "@/context/FolderContext";
 import { ArrowLeft, Star, Trash2 } from "lucide-react";
 import FileBrowser from "@/components/custom/FileBrowser";
-import EmptyTrash from "@/components/custom/EmptyTrash";
 
 export default function Page() {
   const { setPath, currentFolderId, setCurrentFolderId } = useFolder();
@@ -47,8 +46,6 @@ export default function Page() {
                 <ArrowLeft size={20} className="pr-1" /> Back
               </div>
             </button>
-
-            <EmptyTrash />
           </div>
           <div className="space-x-2 flex items-center ">
             <button

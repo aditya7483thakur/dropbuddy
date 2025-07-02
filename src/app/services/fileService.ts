@@ -76,3 +76,19 @@ export async function starFiles(token: string, fileId: string) {
     );
   }
 }
+
+export async function emptyTrash(token: string) {
+  try {
+    const response = await axiosInstance.delete("/api/files/emptyTrash", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Error updating start status:",
+      error?.response?.data || error.message
+    );
+  }
+}
