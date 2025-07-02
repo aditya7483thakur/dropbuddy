@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   Search,
   Settings,
@@ -29,8 +29,6 @@ import {
 } from "lucide-react";
 
 const FileManagerPage = () => {
-  const [selectedView, setSelectedView] = useState("grid");
-
   const recentFiles = [
     { name: "filename.txt", type: "text", icon: FileText },
     {
@@ -94,7 +92,7 @@ const FileManagerPage = () => {
     },
   ];
 
-  const getPermissionColor = (permission: any) => {
+  const getPermissionColor = (permission: string) => {
     switch (permission) {
       case "Editor":
         return "text-green-600 bg-green-50";

@@ -32,7 +32,7 @@ const DropBuddyLanding = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (sectionId: any) => {
+  const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({
@@ -292,7 +292,11 @@ const DropBuddyLanding = () => {
                   </div>
                 </div>
                 <div className="bg-gradient-to-br from-purple-100 to-purple-200 p-4 rounded-lg flex items-center gap-3">
-                  <Image className="text-purple-600" size={24} />
+                  <Image
+                    aria-hidden="true"
+                    className="text-purple-600"
+                    size={24}
+                  />
                   <div>
                     <div className="font-semibold text-sm">Images</div>
                     <div className="text-xs text-gray-600">128 files</div>
@@ -379,7 +383,7 @@ const DropBuddyLanding = () => {
                   </div>
                 </div>
                 <p className="text-gray-700 leading-relaxed italic">
-                  "{testimonial.content}"
+                  &ldquo;{testimonial.content}&rdquo;
                 </p>
               </div>
             ))}

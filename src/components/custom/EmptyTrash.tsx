@@ -27,12 +27,13 @@ export function EmptyTrash() {
 
     try {
       const token = await getToken();
-      const response = await emptyTrash(token!);
+      await emptyTrash(token!);
       toast.success("Trash emptied successfully.");
       setIsDialogOpen(false);
       refreshFiles();
     } catch (error) {
       toast.error("Failed to empty trash. Please try again later.");
+      console.log(error);
     } finally {
       setLoading(false);
     }

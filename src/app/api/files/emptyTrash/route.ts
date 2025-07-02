@@ -3,8 +3,13 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/db";
 import imagekit from "@/lib/imagekit";
 import { eq, and, inArray } from "drizzle-orm";
-import ImageKit from "imagekit";
 import { files } from "@/db/schema";
+
+type ImageKitFile = {
+  fileId: string;
+  name: string;
+  url: string;
+};
 
 // Recursive function to get all descendants of a folder (files and folders)
 async function getAllDescendants(folderId: string) {
@@ -70,7 +75,7 @@ export async function DELETE() {
         const searchResults = (await imagekit.listFiles({
           name: filename,
           limit: 1,
-        })) as any;
+        })) as ImageKitFile[];
 
         if (searchResults?.length > 0 && searchResults[0].fileId) {
           const fileId = searchResults[0].fileId;

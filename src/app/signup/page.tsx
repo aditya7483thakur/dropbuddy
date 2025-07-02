@@ -76,14 +76,15 @@ export default function FileManagementSignup() {
       setIsVerifying(true); // show verification input
 
       console.log("Signup result:", result);
-    } catch (err: any) {
+    } catch (err) {
       toast.error("Internal Server Error");
+      console.log(err);
     }
   }
 
   const handleVerification = async () => {
     if (!isLoaded || !signUp || !setActive) {
-      console.error("Clerk is not fully loaded");
+      console.log("Clerk is not fully loaded");
       return;
     }
     setIsSubmitting(true);
@@ -101,6 +102,7 @@ export default function FileManagementSignup() {
       }
     } catch (error) {
       toast.error("Verification failed");
+      console.log(error);
     }
   };
 

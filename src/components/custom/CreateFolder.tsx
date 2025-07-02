@@ -41,6 +41,7 @@ export function CreateFolder({ parentId }: { parentId: string | null }) {
       setFolderName("");
     } catch (err) {
       toast.error("Error creating folder");
+      console.log(err);
     } finally {
       setLoader(false);
     }

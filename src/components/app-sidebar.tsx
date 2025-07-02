@@ -13,7 +13,7 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Separator } from "./ui/separator";
-import { SignOutButton, useClerk } from "@clerk/nextjs";
+import { useClerk } from "@clerk/nextjs";
 import { useFolder } from "@/context/FolderContext";
 import { CreateFolder } from "./custom/CreateFolder";
 import FileUploadComponent from "./custom/FileUpload";
@@ -37,6 +37,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       toast.success("Signed out successfully.");
     } catch (error) {
       toast.error("Sign out failed");
+      console.log(error);
     } finally {
       setLoading(false);
     }

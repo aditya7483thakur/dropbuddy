@@ -1,7 +1,7 @@
 "use client";
 import { useFolder } from "@/context/FolderContext";
 
-export default function () {
+export default function FolderBreadCrumb() {
   const { path } = useFolder();
   return (
     <nav aria-label="breadcrumb" className="text-lg font-medium text-gray-700">

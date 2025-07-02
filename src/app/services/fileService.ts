@@ -1,4 +1,5 @@
 import axiosInstance from "@/lib/axios";
+import type { AxiosError } from "axios";
 
 export async function fileUpload(
   file: File,
@@ -18,9 +19,12 @@ export async function fileUpload(
     });
 
     return res.data;
-  } catch (error) {
-    console.log("Error creating folder", error);
-    throw error;
+  } catch (error: unknown) {
+    const axiosError = error as AxiosError<{ error: string }>;
+    console.error("Error uploading file:", axiosError?.response?.data);
+    throw new Error(
+      axiosError?.response?.data?.error || "Failed to upload file"
+    );
   }
 }
 
@@ -39,9 +43,12 @@ export async function getUserFiles(
     });
 
     return res.data; // ✅ Axios returns the response body here
-  } catch (error: any) {
-    console.error("Error fetching files:", error);
-    throw new Error(error.response?.data?.error || "Failed to fetch files");
+  } catch (error: unknown) {
+    const axiosError = error as AxiosError<{ error: string }>;
+    console.error("Error fetching files:", axiosError?.response?.data);
+    throw new Error(
+      axiosError?.response?.data?.error || "Failed to fetch files"
+    );
   }
 }
 
@@ -53,10 +60,11 @@ export async function trashFiles(token: string, fileId: string) {
       },
     });
     return response.data;
-  } catch (error: any) {
-    console.error(
-      "Error updating trash status:",
-      error?.response?.data || error.message
+  } catch (error: unknown) {
+    const axiosError = error as AxiosError<{ error: string }>;
+    console.error("Error updating trash status:", axiosError?.response?.data);
+    throw new Error(
+      axiosError?.response?.data?.error || "Error updating trash status"
     );
   }
 }
@@ -69,10 +77,11 @@ export async function starFiles(token: string, fileId: string) {
       },
     });
     return response.data;
-  } catch (error: any) {
-    console.error(
-      "Error updating start status:",
-      error?.response?.data || error.message
+  } catch (error: unknown) {
+    const axiosError = error as AxiosError<{ error: string }>;
+    console.error("Error updating star status:", axiosError?.response?.data);
+    throw new Error(
+      axiosError?.response?.data?.error || "Error updating star status"
     );
   }
 }
@@ -85,10 +94,14 @@ export async function emptyTrash(token: string) {
       },
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const axiosError = error as AxiosError<{ error: string }>;
     console.error(
-      "Error updating start status:",
-      error?.response?.data || error.message
+      "Error occured , while deleting files",
+      axiosError?.response?.data
+    );
+    throw new Error(
+      axiosError?.response?.data?.error || "Error occured while deleting files"
     );
   }
 }

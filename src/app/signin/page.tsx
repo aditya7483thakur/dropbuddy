@@ -66,8 +66,9 @@ export default function FileManagementSignup() {
       } else {
         console.error("Unexpected sign-in flow:", result.status);
       }
-    } catch (err: any) {
+    } catch (err) {
       toast.error("Some error occurred !");
+      console.log(err);
     }
   }
 

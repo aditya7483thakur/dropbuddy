@@ -43,6 +43,7 @@ export default function FileBrowser({
       toast.success("Item has been updated in your Starred list.");
       refreshFiles();
     } catch (err) {
+      console.log(err);
       toast.error("Could not update Starred status. Please try again.");
     } finally {
       setIsStarLoading(false);
@@ -58,6 +59,7 @@ export default function FileBrowser({
       toast.success("Item has been updated in your trash list.");
       refreshFiles();
     } catch (error) {
+      console.log(error);
       toast.error("Could not update trash status. Please try again.");
     } finally {
       setIsTrashLoading(false);
@@ -74,7 +76,7 @@ export default function FileBrowser({
 
   useEffect(() => {
     refreshFiles();
-  }, [parentId]);
+  }, [parentId, refreshFiles]);
 
   const handleDownloadFile = async (file: FileType) => {
     try {
@@ -109,7 +111,7 @@ export default function FileBrowser({
       document.body.removeChild(link);
       URL.revokeObjectURL(blobUrl);
     } catch (error) {
-      console.error("Error downloading file:", error);
+      console.log("Error downloading file:", error);
       toast.error("Download Failed", {
         description: "We couldn't download the file. Please try again later.",
       });
