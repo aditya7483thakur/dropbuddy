@@ -9,7 +9,6 @@ import {
 } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { getUserFiles } from "@/app/services/fileService";
-import { toast } from "sonner";
 
 interface FolderNode {
   id: string | null;

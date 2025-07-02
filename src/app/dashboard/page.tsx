@@ -8,7 +8,6 @@ import FileBrowser from "@/components/custom/FileBrowser";
 export default function Page() {
   const { setPath, currentFolderId, setCurrentFolderId } = useFolder();
   const [filter, setFilter] = useState<"all" | "starred" | "trash">("all");
-  console.log("Dashboard folder", currentFolderId);
 
   // Handler when user clicks a folder inside FileBrowser
   const handleFolderClick = (folderId: string, folderName: string) => {

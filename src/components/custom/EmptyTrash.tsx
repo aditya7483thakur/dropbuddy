@@ -18,14 +18,12 @@ import { useFolder } from "@/context/FolderContext";
 
 export function EmptyTrash() {
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { refreshFiles } = useFolder();
   const { getToken } = useAuth();
 
   async function handleEmptyTrash() {
     setLoading(true);
-    setMessage("");
 
     try {
       const token = await getToken();

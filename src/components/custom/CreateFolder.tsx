@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Folder, Plus } from "lucide-react";
+import { Folder } from "lucide-react";
 import { createFolder } from "@/app/services/folderService";
 import { toast } from "sonner";
 import { useFolder } from "@/context/FolderContext";

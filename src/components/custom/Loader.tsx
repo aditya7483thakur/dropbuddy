@@ -1,7 +1,7 @@
 import { Loader2 } from "lucide-react";
 
 type LoaderProps = {
-  size?: number; // in pixels
+  size?: number;
 };
 
 const Loader: React.FC<LoaderProps> = ({ size = 24 }) => {

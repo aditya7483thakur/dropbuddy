@@ -4,18 +4,13 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  Eye,
-  EyeOff,
   FileText,
   FolderOpen,
   Image,
   LoaderCircle,
-  Shield,
   Star,
   Upload,
-  Users,
   Video,
-  Zap,
 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -33,7 +28,6 @@ import { useRouter } from "next/navigation";
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { toast } from "sonner";

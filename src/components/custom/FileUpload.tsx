@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { fileUpload } from "@/app/services/fileService";
 import { useAuth } from "@clerk/nextjs";
-import { Folder, UploadCloud, UploadCloudIcon } from "lucide-react";
+import { UploadCloud, UploadCloudIcon } from "lucide-react";
 
 import {
   AlertDialog,
@@ -13,7 +13,6 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogCancel,
-  AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useFolder } from "@/context/FolderContext";
@@ -30,14 +29,12 @@ export default function FileUploadDialog({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [uploadResult, setUploadResult] = useState<any>(null);
   const { getToken } = useAuth();
   const { refreshFiles } = useFolder();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError("");
-    setUploadResult(null);
 
     if (!e.target.files || e.target.files.length === 0) {
       setSelectedFile(null);
@@ -62,7 +59,6 @@ export default function FileUploadDialog({
     }
 
     setLoading(true);
-    setUploadResult(null);
 
     try {
       const token = await getToken();

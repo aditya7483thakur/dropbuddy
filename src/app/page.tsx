@@ -7,8 +7,6 @@ import {
   Trash2,
   Shield,
   Zap,
-  Users,
-  Cloud,
   Menu,
   X,
   Check,
@@ -20,6 +18,7 @@ import {
   Github,
   Instagram,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const DropBuddyLanding = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,6 +42,7 @@ const DropBuddyLanding = () => {
     }
     setIsMenuOpen(false);
   };
+  const router = useRouter();
 
   const features = [
     {
@@ -189,8 +189,18 @@ const DropBuddyLanding = () => {
               >
                 Pricing
               </button>
-              <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105">
-                Get Started
+              <button
+                onClick={() => router.push("/signup")}
+                className="bg-gradient-to-r hover:cursor-pointer from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+              >
+                Sign Up
+              </button>
+
+              <button
+                onClick={() => router.push("/signin")}
+                className="bg-gradient-to-r from-blue-600 hover:cursor-pointer to-purple-600 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+              >
+                Sign In
               </button>
             </div>
 
@@ -252,7 +262,10 @@ const DropBuddyLanding = () => {
               with powerful features and intuitive design.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
+              <button
+                onClick={() => router.push("/dashboard")}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full hover:cursor-pointer text-lg font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
+              >
                 Start Managing Files
                 <ArrowRight size={20} />
               </button>
@@ -465,7 +478,7 @@ const DropBuddyLanding = () => {
               </p>
               <div className="flex space-x-4">
                 <a
-                  href="https://linkedin.com"
+                  href="https://www.linkedin.com/in/aditya7483/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors group"
@@ -476,7 +489,7 @@ const DropBuddyLanding = () => {
                   />
                 </a>
                 <a
-                  href="https://github.com"
+                  href="https://github.com/aditya7483thakur"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors group"
@@ -487,7 +500,7 @@ const DropBuddyLanding = () => {
                   />
                 </a>
                 <a
-                  href="https://instagram.com"
+                  href="https://www.instagram.com/dev.with.adi/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 transition-all duration-300 group"

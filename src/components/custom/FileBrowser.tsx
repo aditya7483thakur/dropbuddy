@@ -2,19 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
-import {
-  getUserFiles,
-  starFiles,
-  trashFiles,
-} from "@/app/services/fileService";
-import {
-  DownloadIcon,
-  FileIcon,
-  FileTextIcon,
-  Star,
-  Trash2,
-  TrashIcon,
-} from "lucide-react";
+import { starFiles, trashFiles } from "@/app/services/fileService";
+import { DownloadIcon, FileIcon, Star, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import Loader from "./Loader";
 import { useFolder } from "@/context/FolderContext";
@@ -42,7 +31,6 @@ export default function FileBrowser({
 }: FileBrowserProps) {
   const { files, loading, error, refreshFiles } = useFolder();
   const { getToken } = useAuth();
-  console.log(files);
   const [isTrashLoading, setIsTrashLoading] = useState(false);
   const [isStarLoading, setIsStarLoading] = useState(false);
 
