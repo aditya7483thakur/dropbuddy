@@ -65,6 +65,7 @@ export default function FileUploadDialog({
       const token = await getToken();
       const result = await fileUpload(selectedFile, token!, parentId);
       setUploadResult(result);
+      console.log(result);
       setSelectedFile(null);
     } catch (err) {
       setError("Upload failed. Please try again.");
