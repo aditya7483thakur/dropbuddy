@@ -15,15 +15,16 @@ import { Button } from "@/components/ui/button";
 import { Folder, Plus } from "lucide-react";
 import { createFolder } from "@/app/services/folderService";
 import { toast } from "sonner";
+import { useFolder } from "@/context/FolderContext";
 
 export function CreateFolder({ parentId }: { parentId: string | null }) {
   const [folderName, setFolderName] = useState("");
   const [loader, setLoader] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { refreshFiles } = useFolder();
   const { getToken } = useAuth();
   const handleCreate = async () => {
     if (!folderName.trim()) return;
-
     setLoader(true);
     try {
       const token = await getToken();
@@ -35,6 +36,7 @@ export function CreateFolder({ parentId }: { parentId: string | null }) {
       if (response?.status === 200 || response?.message) {
         toast.success(response.message);
         setIsDialogOpen(false);
+        refreshFiles();
       }
       setFolderName("");
     } catch (err) {
@@ -67,6 +69,7 @@ export function CreateFolder({ parentId }: { parentId: string | null }) {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <Button
               onClick={handleCreate}
+              disabled={loader}
               className="bg-indigo-500 text-white hover:cursor-pointer"
             >
               {loader ? "Creating..." : "Create"}

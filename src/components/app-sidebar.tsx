@@ -20,6 +20,7 @@ import FileUploadComponent from "./custom/FileUpload";
 import { EmptyTrash } from "./custom/EmptyTrash";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import { toast } from "sonner";
 
 // Define sidebar links
 
@@ -32,9 +33,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const handleSignOut = async () => {
     setLoading(true);
     try {
-      await signOut(); // Clerk will handle the redirect
+      await signOut();
+      toast.success("Signed out successfully.");
     } catch (error) {
-      console.error("Sign out failed:", error);
+      toast.error("Sign out failed");
     } finally {
       setLoading(false);
     }

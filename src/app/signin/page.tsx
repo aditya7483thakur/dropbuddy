@@ -27,11 +27,7 @@ import {
 } from "@/components/ui/form";
 import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -67,12 +63,13 @@ export default function FileManagementSignup() {
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
         setIsSubmitting(false);
+        toast.success("Signed In successfully");
         router.push("/dashboard");
       } else {
         console.error("Unexpected sign-in flow:", result.status);
       }
     } catch (err: any) {
-      console.error("Sign-in error:", err);
+      toast.error("Some error occurred !");
     }
   }
 
@@ -141,7 +138,9 @@ export default function FileManagementSignup() {
               />
               <Button
                 type="submit"
-                className={isSubmitting ? "bg-black/75" : "bg-black"}
+                className={`hover:cursor-pointer  ${
+                  isSubmitting ? "bg-black/75" : "bg-black"
+                }`}
               >
                 {isSubmitting && <LoaderCircle className=" animate-spin" />}
                 Sign In
@@ -149,31 +148,15 @@ export default function FileManagementSignup() {
             </form>
           </Form>
 
-          {/* Signup Form */}
-
           <div className="text-center mt-6">
             <p className="text-sm text-slate-600">
-              Already have an account?{" "}
+              Don’t have an account?{" "}
               <a
-                href="#"
+                href="/signup"
                 className="text-purple-600 hover:text-purple-700 font-medium"
               >
-                Log in
+                Sign up
               </a>
-            </p>
-          </div>
-
-          <div className="text-center mt-6">
-            <p className="text-xs text-slate-500">
-              By signing up, you agree to the{" "}
-              <a href="#" className="text-purple-600 hover:underline">
-                FileVault Services Agreement
-              </a>{" "}
-              and{" "}
-              <a href="#" className="text-purple-600 hover:underline">
-                Data Processing Agreement
-              </a>
-              .
             </p>
           </div>
         </div>

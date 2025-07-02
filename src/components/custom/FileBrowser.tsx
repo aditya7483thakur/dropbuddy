@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import Loader from "./Loader";
+import { useFolder } from "@/context/FolderContext";
 
 interface FileType {
   id: string;
@@ -39,23 +40,22 @@ export default function FileBrowser({
   onFolderClick,
   filter,
 }: FileBrowserProps) {
-  const [files, setFiles] = useState<FileType[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { files, loading, error, refreshFiles } = useFolder();
   const { getToken } = useAuth();
   console.log(files);
   const [isTrashLoading, setIsTrashLoading] = useState(false);
   const [isStarLoading, setIsStarLoading] = useState(false);
-  const [view, setView] = useState<"all" | "starred" | "trash">("all");
 
   const handleStarToggle = async (fileId: string) => {
     setIsStarLoading(true);
+    toast.info("Updating item...");
     try {
       const token = await getToken();
-      const response = await starFiles(token!, fileId);
-      fetchFiles();
+      await starFiles(token!, fileId);
+      toast.success("Item has been updated in your Starred list.");
+      refreshFiles();
     } catch (err) {
-      console.error("Failed to update star status", err);
+      toast.error("Could not update Starred status. Please try again.");
     } finally {
       setIsStarLoading(false);
     }
@@ -63,13 +63,14 @@ export default function FileBrowser({
 
   const handleTrashToggle = async (fileId: string) => {
     setIsTrashLoading(true);
+    toast.info("Updating item...");
     try {
       const token = await getToken();
-      const response = await trashFiles(token!, fileId);
-      fetchFiles();
-      console.log("Res", response);
+      await trashFiles(token!, fileId);
+      toast.success("Item has been updated in your trash list.");
+      refreshFiles();
     } catch (error) {
-      console.error("Failed to update trash status");
+      toast.error("Could not update trash status. Please try again.");
     } finally {
       setIsTrashLoading(false);
     }
@@ -83,32 +84,12 @@ export default function FileBrowser({
     })
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  const fetchFiles = async () => {
-    setFiles([]);
-    setLoading(true);
-    setError("");
-
-    try {
-      const token = await getToken();
-      const data = await getUserFiles(token!, parentId);
-      setFiles(data);
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchFiles();
+    refreshFiles();
   }, [parentId]);
 
   const handleDownloadFile = async (file: FileType) => {
     try {
-      toast.info("Preparing Download", {
-        description: `Getting "${file.name}" ready for download...`,
-      });
-
       let downloadUrl = file.fileUrl;
 
       if (
@@ -131,12 +112,8 @@ export default function FileBrowser({
       link.download = file.name;
       document.body.appendChild(link);
 
-      toast("Download Ready", {
-        description: `"${file.name}" is ready to download.`,
-        action: {
-          label: "Open",
-          onClick: () => window.open(blobUrl, "_blank"),
-        },
+      toast.success("File downloaded", {
+        description: `"${file.name}" downloaded.`,
       });
 
       link.click();
@@ -145,7 +122,7 @@ export default function FileBrowser({
       URL.revokeObjectURL(blobUrl);
     } catch (error) {
       console.error("Error downloading file:", error);
-      toast("Download Failed", {
+      toast.error("Download Failed", {
         description: "We couldn't download the file. Please try again later.",
       });
     }

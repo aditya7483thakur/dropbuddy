@@ -13,12 +13,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { TrashIcon } from "lucide-react";
 import { emptyTrash } from "@/app/services/fileService";
+import { toast } from "sonner";
+import { useFolder } from "@/context/FolderContext";
 
 export function EmptyTrash() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  const { refreshFiles } = useFolder();
   const { getToken } = useAuth();
 
   async function handleEmptyTrash() {
@@ -28,12 +30,11 @@ export function EmptyTrash() {
     try {
       const token = await getToken();
       const response = await emptyTrash(token!);
-      if (response?.status === 200 || response?.message) {
-        setMessage(response.message || "Trash emptied successfully");
-        setIsDialogOpen(false); // ✅ Close dialog on success
-      }
+      toast.success("Trash emptied successfully.");
+      setIsDialogOpen(false);
+      refreshFiles();
     } catch (error) {
-      console.log(error);
+      toast.error("Failed to empty trash. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -61,7 +62,7 @@ export function EmptyTrash() {
             <Button
               onClick={handleEmptyTrash}
               disabled={loading}
-              className="bg-indigo-500 text-white"
+              className="bg-indigo-500 text-white hover:cursor-pointer"
             >
               {loading ? "Emptying..." : "Empty"}
             </Button>

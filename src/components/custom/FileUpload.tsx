@@ -16,6 +16,8 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { useFolder } from "@/context/FolderContext";
+import { toast } from "sonner";
 
 const MAX_FILE_SIZE_MB = 5;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -30,6 +32,8 @@ export default function FileUploadDialog({
   const [loading, setLoading] = useState(false);
   const [uploadResult, setUploadResult] = useState<any>(null);
   const { getToken } = useAuth();
+  const { refreshFiles } = useFolder();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError("");
@@ -43,7 +47,7 @@ export default function FileUploadDialog({
     const file = e.target.files[0];
 
     if (file.size > MAX_FILE_SIZE_BYTES) {
-      setError(`File size must be less than ${MAX_FILE_SIZE_MB} MB`);
+      toast.error(`File size must be less than ${MAX_FILE_SIZE_MB} MB`);
       setSelectedFile(null);
       return;
     }
@@ -53,22 +57,23 @@ export default function FileUploadDialog({
 
   const handleUpload = async () => {
     if (!selectedFile) {
-      setError("Please select a file first");
+      toast.error("Please select a file first");
       return;
     }
 
     setLoading(true);
-    setError("");
     setUploadResult(null);
 
     try {
       const token = await getToken();
       const result = await fileUpload(selectedFile, token!, parentId);
-      setUploadResult(result);
+      toast.success("File uploaded successfully.");
       console.log(result);
       setSelectedFile(null);
+      setIsDialogOpen(false);
+      refreshFiles();
     } catch (err) {
-      setError("Upload failed. Please try again.");
+      toast.error("Upload failed. Please try again.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -76,7 +81,7 @@ export default function FileUploadDialog({
   };
 
   return (
-    <AlertDialog>
+    <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <AlertDialogTrigger asChild>
         <div className="flex font-medium text-lg w-full items-center">
           <UploadCloudIcon className="w-4 h-4" />

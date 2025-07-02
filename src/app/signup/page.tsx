@@ -31,6 +31,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -69,12 +70,15 @@ export default function FileManagementSignup() {
         password,
       });
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+      toast.info(
+        "Verification code sent successfully. Please check your email."
+      );
       setIsSubmitting(false);
       setIsVerifying(true); // show verification input
 
       console.log("Signup result:", result);
     } catch (err: any) {
-      console.error("Sign up error:", err);
+      toast.error("Internal Server Error");
     }
   }
 
@@ -94,9 +98,10 @@ export default function FileManagementSignup() {
         await setActive({ session: result.createdSessionId });
         setIsSubmitting(false);
         router.push("/dashboard");
+        toast.success("Signed Up successfully");
       }
     } catch (error) {
-      console.error("Verification failed:", error);
+      toast.error("Verification failed");
     }
   };
 
@@ -127,7 +132,7 @@ export default function FileManagementSignup() {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-slate-900 mb-2">
-              Create a FileVault account
+              Create a DropBuddy account
             </h2>
           </div>
 
@@ -136,8 +141,7 @@ export default function FileManagementSignup() {
           )}
 
           {isVerifying ? (
-            <div>
-              {" "}
+            <div className="flex flex-col items-center justify-center ">
               <InputOTP
                 maxLength={6}
                 value={otp}
@@ -154,10 +158,13 @@ export default function FileManagementSignup() {
               </InputOTP>
               <Button
                 type="button"
-                className={isSubmitting ? "bg-black/75" : "bg-black"}
+                className={`hover:cursor-pointer mt-4 ${
+                  isSubmitting ? "bg-black/75" : "bg-black"
+                }`}
+                onClick={handleVerification}
               >
                 {isSubmitting && <LoaderCircle className=" animate-spin" />}
-                Verify
+                {isSubmitting ? "Verifying" : "Verify"}
               </Button>
             </div>
           ) : (
@@ -194,7 +201,9 @@ export default function FileManagementSignup() {
                 />
                 <Button
                   type="submit"
-                  className={isSubmitting ? "bg-black/75" : "bg-black"}
+                  className={`hover:cursor-pointer ${
+                    isSubmitting ? "bg-black/75" : "bg-black"
+                  }`}
                 >
                   {isSubmitting && <LoaderCircle className=" animate-spin" />}
                   Submit
@@ -209,7 +218,7 @@ export default function FileManagementSignup() {
             <p className="text-sm text-slate-600">
               Already have an account?{" "}
               <a
-                href="#"
+                href="/signin"
                 className="text-purple-600 hover:text-purple-700 font-medium"
               >
                 Log in
@@ -221,7 +230,7 @@ export default function FileManagementSignup() {
             <p className="text-xs text-slate-500">
               By signing up, you agree to the{" "}
               <a href="#" className="text-purple-600 hover:underline">
-                FileVault Services Agreement
+                Services Agreement
               </a>{" "}
               and{" "}
               <a href="#" className="text-purple-600 hover:underline">

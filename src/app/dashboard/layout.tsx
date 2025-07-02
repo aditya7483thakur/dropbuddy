@@ -21,10 +21,10 @@ export default function RootLayout({
             <AppSidebar />
             <SidebarInset>
               <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 sticky top-0 z-50 bg-white ">
-                <SidebarTrigger className="-ml-1" />
+                <SidebarTrigger className="-ml-1 text-2xl" size="lg" />
                 <Separator
                   orientation="vertical"
-                  className="mr-2 data-[orientation=vertical]:h-4"
+                  className="mr-2 data-[orientation=vertical]:h-6 border"
                 />
                 <FolderBreadCrumb />
               </header>
