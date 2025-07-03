@@ -1,4 +1,5 @@
 "use client";
+import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
 
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -52,6 +53,7 @@ export default function FileManagementSignup() {
     }
 
     setIsSubmitting(true);
+
     try {
       const result = await signIn.create({
         identifier: values.email,
@@ -60,18 +62,69 @@ export default function FileManagementSignup() {
 
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-        setIsSubmitting(false);
-        toast.success("Signed In successfully");
+        toast.success("Signed in successfully");
         router.push("/dashboard");
       } else {
+        // Handle incomplete sign-in (e.g., needs 2FA)
         console.error("Unexpected sign-in flow:", result.status);
+        toast.error("Sign-in requires additional verification");
       }
     } catch (err) {
-      toast.error("Some error occurred !");
-      console.log(err);
+      console.error("Sign-in error:", err);
+
+      // Type-safe error handling
+      if (isClerkAPIResponseError(err)) {
+        // Now TypeScript knows err has the correct Clerk error structure
+        const error = err.errors[0];
+
+        switch (error.code) {
+          case "form_identifier_not_found":
+            toast.error(
+              "No account found with this email address, Please signup first !"
+            );
+            break;
+          case "form_password_incorrect":
+            toast.error("Incorrect password. Please try again");
+            break;
+          case "form_identifier_exists":
+            toast.error("An account with this email already exists");
+            break;
+          case "too_many_requests":
+            toast.error("Too many sign-in attempts. Please try again later");
+            break;
+          case "captcha_invalid":
+            toast.error("Please complete the captcha verification");
+            break;
+          default:
+            toast.error(error.message || "Sign-in failed. Please try again");
+        }
+      } else if (err && typeof err === "object" && "errors" in err) {
+        // Handle cases where it might be a Clerk-like error but not caught by isClerkAPIResponseError
+        const clerkLikeError = err as {
+          errors: Array<{ message?: string; code?: string }>;
+        };
+        const errorMessage = clerkLikeError.errors?.[0]?.message;
+
+        if (errorMessage?.includes("found in an online data breach")) {
+          toast.error(
+            "This password has been compromised. Please use a different password"
+          );
+        } else {
+          toast.error(
+            errorMessage || "Authentication failed. Please try again"
+          );
+        }
+      } else if (err instanceof Error) {
+        // Handle standard JavaScript errors
+        toast.error("A network error occurred. Please check your connection");
+      } else {
+        // Handle completely unexpected errors
+        toast.error("An unexpected error occurred. Please try again");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   }
-
   const [showCaptcha, setShowCaptcha] = useState(false);
 
   useEffect(() => {

@@ -217,28 +217,43 @@ const DropBuddyLanding = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden bg-white border-t shadow-lg">
-            <div className="px-4 py-2 space-y-4">
+            <div className="px-4 py-4 space-y-3">
               <button
                 onClick={() => scrollToSection("features")}
-                className="block text-gray-700 hover:text-blue-600 py-2 w-full text-left"
+                className="block text-gray-700 hover:text-blue-600 py-2 w-full text-left transition-colors"
               >
                 Features
               </button>
               <button
                 onClick={() => scrollToSection("testimonials")}
-                className="block text-gray-700 hover:text-blue-600 py-2 w-full text-left"
+                className="block text-gray-700 hover:text-blue-600 py-2 w-full text-left transition-colors"
               >
                 Testimonials
               </button>
               <button
                 onClick={() => scrollToSection("pricing")}
-                className="block text-gray-700 hover:text-blue-600 py-2 w-full text-left"
+                className="block text-gray-700 hover:text-blue-600 py-2 w-full text-left transition-colors"
               >
                 Pricing
               </button>
-              <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full">
-                Get Started
-              </button>
+
+              {/* Divider */}
+              <div className="border-t border-gray-200 my-4"></div>
+
+              <div className="space-y-3">
+                <button
+                  onClick={() => router.push("/signup")}
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 font-medium"
+                >
+                  Sign Up
+                </button>
+                <button
+                  onClick={() => router.push("/signin")}
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 font-medium"
+                >
+                  Sign In
+                </button>
+              </div>
             </div>
           </div>
         )}

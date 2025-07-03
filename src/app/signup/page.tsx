@@ -76,9 +76,32 @@ export default function FileManagementSignup() {
       setIsVerifying(true); // show verification input
 
       console.log("Signup result:", result);
-    } catch (err) {
-      toast.error("Internal Server Error");
-      console.log(err);
+    } catch (error) {
+      // More specific type checking for Clerk errors
+      if (error && typeof error === "object" && "errors" in error) {
+        const clerkError = error as {
+          errors: Array<{ message: string; code?: string }>;
+        };
+
+        const passwordBreachError = clerkError.errors?.find((err) =>
+          err.message?.includes("found in an online data breach")
+        );
+
+        if (passwordBreachError) {
+          toast.error(
+            "This password has been compromised in a data breach. Please choose a different one."
+          );
+        } else {
+          toast.error(
+            clerkError.errors?.[0]?.message ||
+              "An error occurred during sign up"
+          );
+        }
+      } else {
+        toast.error("An unexpected error occurred");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -103,6 +126,8 @@ export default function FileManagementSignup() {
     } catch (error) {
       toast.error("Verification failed");
       console.log(error);
+      setIsVerifying(false);
+      setIsSubmitting(false);
     }
   };
 
