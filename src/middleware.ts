@@ -6,7 +6,6 @@ const isPublicRoute = createRouteMatcher(["/signin(.*)", "/signup(.*)", "/"]);
 export default clerkMiddleware(async (auth, request) => {
   const user = auth();
   const userId = (await user).userId;
-  const url = new URL(request.url);
 
   if (userId && isPublicRoute(request)) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
