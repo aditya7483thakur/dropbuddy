@@ -3,7 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
-import GoogleAnalytics from "@/components/custom/Analytics";
+import * as gtag from "../lib/gtag";
+import Script from "next/script";
+import Analytics from "@/components/custom/Analytics";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +30,23 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <GoogleAnalytics />
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${gtag.GA_TRACKING_ID}', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
+
+        {/* Analytics Route Tracker */}
+        <Analytics />
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >

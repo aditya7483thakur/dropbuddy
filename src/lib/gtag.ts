@@ -1,4 +1,5 @@
-export const GA_TRACKING_ID = "G-E6FB2D835Z";
+export const GA_TRACKING_ID = "G-L8LY15KVPR";
+
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageview = (url: string) => {
   if (typeof window !== "undefined") {
@@ -11,21 +12,13 @@ export const pageview = (url: string) => {
 // https://developers.google.com/analytics/devguides/collection/gtagjs/events
 export const event = ({
   action,
-  category,
-  label,
-  value,
+  params,
 }: {
   action: string;
-  category: string;
-  label?: string;
-  value?: number;
+  params?: Record<string, unknown>;
 }) => {
   if (typeof window !== "undefined") {
-    window.gtag("event", action, {
-      event_category: category,
-      event_label: label,
-      value: value,
-    });
+    window.gtag("event", action, params);
   }
 };
 
