@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
-import Script from "next/script";
+import GoogleAnalytics from "@/components/custom/Analytics";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,22 +28,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <Script
-          strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=G-E6FB2D835Z"
-        />
-        <Script
-          id="google-analytics"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-E6FB2D835Z');
-            `,
-          }}
-        />
+        <GoogleAnalytics />
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
