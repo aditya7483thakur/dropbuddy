@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import Script from "next/script";
 import * as gtag from "@/lib/gtag";
 
-export default function GoogleAnalytics() {
+function GoogleAnalyticsTracker() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -14,11 +14,15 @@ export default function GoogleAnalytics() {
     gtag.pageview(url);
   }, [pathname, searchParams]);
 
+  return null;
+}
+
+export default function GoogleAnalytics() {
   return (
     <>
       <Script
         strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=G-E6FB2D835Z`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
       />
       <Script
         id="gtag-init"
@@ -28,12 +32,15 @@ export default function GoogleAnalytics() {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-E6FB2D835Z', {
+            gtag('config', '${gtag.GA_TRACKING_ID}', {
               page_path: window.location.pathname,
             });
           `,
         }}
       />
+      <Suspense fallback={null}>
+        <GoogleAnalyticsTracker />
+      </Suspense>
     </>
   );
 }
