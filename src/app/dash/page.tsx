@@ -108,11 +108,11 @@ const FileManagerPage = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <div className="w-64 bg-indigo-600 text-white flex flex-col">
+      <div className="w-64 bg-purple-600 text-white flex flex-col">
         {/* Logo */}
-        <div className="flex items-center gap-3 p-4 border-b border-indigo-500">
+        <div className="flex items-center gap-3 p-4 border-b border-purple-500">
           <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-            <span className="text-indigo-600 font-bold text-sm">S</span>
+            <span className="text-purple-600 font-bold text-sm">S</span>
           </div>
           <span className="font-semibold text-lg">slothui</span>
         </div>
@@ -134,7 +134,7 @@ const FileManagerPage = () => {
           <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-indigo-500 bg-opacity-50">
             <Home className="w-5 h-5" />
             <span>Home</span>
-            <span className="ml-auto bg-white text-indigo-600 text-xs px-2 py-1 rounded-full">
+            <span className="ml-auto bg-white text-purple-600 text-xs px-2 py-1 rounded-full">
               10
             </span>
           </div>
@@ -145,7 +145,7 @@ const FileManagerPage = () => {
           <div className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-indigo-500 hover:bg-opacity-50 transition-colors">
             <Users className="w-5 h-5" />
             <span>Users</span>
-            <span className="ml-auto bg-white text-indigo-600 text-xs px-2 py-1 rounded-full">
+            <span className="ml-auto bg-white text-purple-600 text-xs px-2 py-1 rounded-full">
               2
             </span>
           </div>
@@ -184,7 +184,7 @@ const FileManagerPage = () => {
             <button className="text-xs text-indigo-200 hover:text-white">
               Dismiss
             </button>
-            <button className="text-xs bg-white text-indigo-600 px-3 py-1 rounded font-medium hover:bg-indigo-50">
+            <button className="text-xs bg-white text-purple-600 px-3 py-1 rounded font-medium hover:bg-indigo-50">
               Go Pro
             </button>
           </div>
@@ -226,7 +226,7 @@ const FileManagerPage = () => {
                 <Star className="w-4 h-4" />
                 Go Pro
               </button>
-              <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+              <button className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
                 <Share2 className="w-4 h-4" />
                 Share
               </button>
@@ -291,7 +291,7 @@ const FileManagerPage = () => {
                             file.type === "folder"
                               ? "text-blue-500"
                               : file.highlighted
-                              ? "text-indigo-600"
+                              ? "text-purple-600"
                               : "text-gray-500"
                           }`}
                         >
@@ -320,7 +320,7 @@ const FileManagerPage = () => {
                   <button className="flex items-center gap-1 px-3 py-1 text-gray-600 hover:text-gray-900">
                     <Plus className="w-4 h-4" />
                   </button>
-                  <button className="flex items-center gap-2 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                  <button className="flex items-center gap-2 px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-indigo-700">
                     <Filter className="w-4 h-4" />
                     Filter
                   </button>

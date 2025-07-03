@@ -36,7 +36,7 @@ export default function Page() {
               onClick={handleBack}
               disabled={currentFolderId === null}
               className={`mb-4 px-3 py-1 bg-black text-white rounded hover:cursor-pointer ${
-                currentFolderId === null ? " opacity-70" : ""
+                currentFolderId === null ? " opacity-60" : ""
               }`}
               style={{ boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)" }}
             >
